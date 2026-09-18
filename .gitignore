@@ -6,3 +6,6 @@ out/
 *.tsbuildinfo
 .vercel/
 .DS_Store
+.video_work/
+1.mp4
+ResearchBridge_Hackathon_Demo.mp4
