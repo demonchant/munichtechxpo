@@ -1,12 +1,26 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
-const SYSTEM = `You are ResearchBridge, a careful research coach for high-school and early-career learners. Return valid JSON only with keys: researchQuestion (string), hypothesis (string), method (array of 3-5 short strings), evidence (array of 2-4 strings), limitations (array of 2-4 strings), plainLanguageSummary (string). Never invent sources or claim certainty. Make the project ethical, feasible within two weeks, and suitable for a student. If dataset context is supplied, use only the visible columns/sample and explicitly state that the full dataset was not independently verified.`;
+const SYSTEM = `You are ResearchBridge, a careful research coach for high school and early career learners. Return valid JSON only with keys: researchQuestion (string), hypothesis (string), method (array of three to five short strings), evidence (array of two to four strings), limitations (array of two to four strings), plainLanguageSummary (string). Never invent sources or claim certainty. Make the project ethical, feasible within two weeks, and suitable for a student. If dataset context is supplied, use only the visible columns and sample. Explicitly state that the full dataset was not independently verified. Use natural sentences without hyphens or dash punctuation.`;
 
 function extractOpenAIText(data: Record<string, unknown>) {
   if (typeof data.output_text === "string") return data.output_text;
   const output = data.output as Array<{ content?: Array<{ text?: string }> }> | undefined;
   return output?.flatMap((item) => item.content ?? []).map((part) => part.text ?? "").join("") ?? "";
+}
+
+function removeDashes(value: unknown): unknown {
+  if (typeof value === "string") {
+    return value
+      .replace(/[–—]/g, ", ")
+      .replace(/\s*--\s*/g, ", ")
+      .replace(/([A-Za-z])-([A-Za-z])/g, "$1 $2");
+  }
+  if (Array.isArray(value)) return value.map(removeDashes);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, removeDashes(item)]));
+  }
+  return value;
 }
 
 export async function POST(request: Request) {
@@ -49,7 +63,8 @@ export async function POST(request: Request) {
     }
 
     const cleaned = raw.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
-    return NextResponse.json({ ...JSON.parse(cleaned), provider: used });
+    const plan = removeDashes(JSON.parse(cleaned)) as Record<string, unknown>;
+    return NextResponse.json({ ...plan, provider: used });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create the research plan.";
     return NextResponse.json({ error: message }, { status: 500 });

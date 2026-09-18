@@ -1,6 +1,6 @@
 # ResearchBridge
 
-ResearchBridge is a responsible AI research coach for high-school students and early-career learners. It turns curiosity into a feasible research question, method, evidence checklist, limitations, and plain-language explanation.
+ResearchBridge is a responsible AI research coach for high school students and early career learners. It turns curiosity into a feasible research question, method, evidence checklist, limitations, and a plain language explanation.
 
 Built for the **RISE Research Youth Innovation & Research Challenge** at MunichTech EXPO 2026.
 
@@ -10,31 +10,31 @@ Many students have promising ideas but lack access to research mentorship. Resea
 
 ## Features
 
-- Age-aware research question and hypothesis coaching
-- Optional CSV preview for dataset-grounded planning
-- Step-by-step method and evidence checklist
-- Explicit limitations and responsible-AI notice
+- Clear research question and hypothesis coaching
+- Optional CSV preview for planning with data
+- Guided method and evidence checklist
+- Explicit limitations and responsible AI notice
 - OpenAI primary inference with Featherless.ai fallback
-- Print-friendly research canvas export
+- Research canvas export for printing
 - ElevenLabs spoken summaries for accessible learning
-- Server-only API keys
-- Per-IP API rate protection with a Vercel WAF production layer
+- API keys remain on the server
+- API rate protection for each visitor with a Vercel WAF production layer
 
 ## Judging criteria alignment
 
 | Criterion | Evidence in ResearchBridge |
 | --- | --- |
 | Educational and research impact | Guides a learner through a question, hypothesis, method, evidence, and limitations instead of generating a finished paper. |
-| Originality | Combines research-method coaching, dataset-aware planning, uncertainty labels, and accessible audio in one student-first canvas. |
+| Originality | Combines research method coaching, planning with data, uncertainty labels, and accessible audio in one canvas designed for students. |
 | Technical execution | Uses secure server routes, two swappable inference providers, truncated CSV previews, structured AI output, responsive UI, and optional speech synthesis. |
 | Demo and pitch quality | Delivers one clear journey from a student's curiosity to a printable and spoken research canvas in under two minutes. |
 
 ## Challenge compliance
 
-- Designed specifically for high-school students and early-career learners
+- Designed specifically for high school students and early career learners
 - Works with public or open CSV datasets and does not depend on proprietary RISE data
 - Core source is public and reviewable
-- Demo is written for a non-technical education audience
+- Demo is written for a general education audience
 - Team size must remain between one and five participants
 - Target submission date is 20 September 2026
 
@@ -54,11 +54,11 @@ ResearchBridge uses generative AI to formulate questions, explain concepts, and 
 
 ## Privacy
 
-Dataset previews are truncated before inference. Users should not upload personal, medical, or confidential information. API credentials remain server-side.
+Dataset previews are shortened before inference. Users should not upload personal, medical, or confidential information. API credentials remain on the server.
 
 ## Abuse protection
 
-Both paid API routes apply a per-IP fixed-window backstop. Production deployments should also configure a Vercel WAF fixed-window rule for the `/api/` path so abusive requests are rejected before a serverless function or provider is called.
+Both paid API routes apply a request limit for each visitor. Production deployments should also configure a Vercel WAF rule for the `/api/` path so abusive requests are rejected before a serverless function or provider is called.
 
 ## License
 

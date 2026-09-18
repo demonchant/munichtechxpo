@@ -26,6 +26,16 @@ h1 { font: 650 clamp(48px, 6vw, 82px)/.98 var(--font-serif), serif; margin: 18px
 .lead { font-size: 18px; line-height: 1.65; color: var(--muted); max-width: 610px; }
 .trust { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
 .trust span { font-size: 13px; padding: 9px 12px; border-radius: 12px; background: rgba(255,255,255,.7); border: 1px solid var(--line); }
+.studentShowcase { margin-top: 24px; max-width: 610px; }
+.studentViewport { overflow: hidden; border-radius: 24px; border: 1px solid rgba(198,208,201,.8); box-shadow: 0 20px 48px rgba(37,63,52,.14); background: #dfe9df; }
+.studentTrack { display: flex; transition: transform .7s cubic-bezier(.22,.61,.36,1); }
+.studentStory { position: relative; flex: 0 0 100%; aspect-ratio: 4 / 3; margin: 0; overflow: hidden; }
+.studentStory img { object-fit: cover; }
+.studentStory::after { content: ""; position: absolute; inset: 52% 0 0; background: linear-gradient(transparent, rgba(10,24,18,.72)); }
+.studentStory figcaption { position: absolute; z-index: 1; left: 20px; right: 20px; bottom: 18px; color: white; font: 620 20px var(--font-serif), serif; }
+.studentControls { display: flex; justify-content: center; gap: 8px; margin-top: 13px; }
+.studentControls button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: #b8c4bd; transition: width .25s ease, background .25s ease; }
+.studentControls button.current { width: 25px; border-radius: 99px; background: var(--green); }
 .workspace { background: var(--card); border: 1px solid rgba(198,208,201,.8); border-radius: 28px; padding: 26px; box-shadow: 0 28px 80px rgba(37,63,52,.14); backdrop-filter: blur(14px); }
 .stepbar { display: flex; gap: 7px; margin-bottom: 25px; }
 .stepbar i { height: 5px; flex: 1; border-radius: 99px; background: #dfe5df; }
@@ -46,7 +56,7 @@ textarea:focus, select:focus, input:focus { border-color: var(--green); box-shad
 .upload { border: 1px dashed #9caf9f; border-radius: 14px; padding: 13px; color: var(--muted); font-size: 13px; background: #fafcf9; }
 .error { color: #9d2b13; background: #fff0eb; border-radius: 10px; padding: 10px; font-size: 13px; margin-top: 12px; }
 .result { animation: rise .35s ease-out; }
-.result-head { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+.resultHead { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
 .tag { color: var(--green); background: #e7f5df; border-radius: 999px; padding: 6px 9px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
 .question { font: 620 24px/1.25 var(--font-serif), serif; margin: 14px 0 18px; }
 .section { padding: 15px 0; border-top: 1px solid var(--line); }
@@ -61,3 +71,4 @@ textarea:focus, select:focus, input:focus { border-color: var(--green); box-shad
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
 @media (max-width: 850px) { .hero { grid-template-columns: 1fr; gap: 35px; padding-top: 25px; } h1 { letter-spacing: -2px; } .values { grid-template-columns: 1fr; } }
 @media (max-width: 500px) { .nav, .hero, .values { padding-left: 18px; padding-right: 18px; } .row { grid-template-columns: 1fr; } .workspace { padding: 20px; border-radius: 22px; } }
+@media (prefers-reduced-motion: reduce) { .studentTrack, .studentControls button { transition: none; } }
