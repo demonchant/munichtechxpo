@@ -56,6 +56,22 @@ textarea:focus, select:focus, input:focus { border-color: var(--green); box-shad
 .secondary { background: #e9ede9; color: var(--ink); }
 .upload { border: 1px dashed #9caf9f; border-radius: 14px; padding: 13px; color: var(--muted); font-size: 13px; background: #fafcf9; }
 .error { color: #9d2b13; background: #fff0eb; border-radius: 10px; padding: 10px; font-size: 13px; margin-top: 12px; }
+.loadingState { min-height: 470px; display: flex; flex-direction: column; justify-content: center; }
+.loadingState h2 { margin-top: 12px; }
+.loadingMessage { min-height: 25px; margin: 4px 0 24px; color: var(--green); font-weight: 750; }
+.researchSpinner { position: relative; width: 64px; height: 64px; margin-bottom: 26px; }
+.researchSpinner span { position: absolute; inset: 0; border: 2px solid rgba(15,107,79,.2); border-top-color: var(--green); border-radius: 50%; animation: researchSpin 1.4s linear infinite; }
+.researchSpinner span:nth-child(2) { inset: 9px; animation-direction: reverse; animation-duration: 1s; }
+.researchSpinner span:nth-child(3) { inset: 20px; border-color: var(--orange); animation-duration: .8s; }
+.loadingStages { display: grid; gap: 9px; }
+.loadingStages div { display: flex; align-items: center; gap: 11px; color: #94a09b; transition: color .25s ease; }
+.loadingStages div > span { width: 27px; height: 27px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; background: #edf0ed; font-size: 12px; font-weight: 800; }
+.loadingStages p { margin: 0; font-size: 13px; }
+.loadingStages div.active { color: var(--ink); font-weight: 750; }
+.loadingStages div.active > span { color: white; background: var(--green); box-shadow: 0 0 0 5px rgba(15,107,79,.1); }
+.loadingStages div.complete { color: var(--green); }
+.loadingStages div.complete > span { color: var(--green); background: #e6f5df; }
+.loadingNote { margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 .result { animation: rise .35s ease-out; }
 .resultHead { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
 .tag { color: var(--green); background: #e7f5df; border-radius: 999px; padding: 6px 9px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
@@ -70,6 +86,7 @@ textarea:focus, select:focus, input:focus { border-color: var(--green); box-shad
 .value b { font: 620 19px var(--font-serif), serif; display: block; margin-bottom: 7px; }
 .value p { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0; }
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+@keyframes researchSpin { to { transform: rotate(360deg); } }
 @media (max-width: 850px) { .hero { padding-top: 48px; padding-bottom: 48px; } .heroGrid { grid-template-columns: 1fr; gap: 35px; } .heroShade { background: linear-gradient(180deg, rgba(9,24,18,.82), rgba(9,24,18,.62)); } h1 { letter-spacing: -2px; } .values { grid-template-columns: 1fr; } }
 @media (max-width: 500px) { .nav, .hero, .values { padding-left: 18px; padding-right: 18px; } .row { grid-template-columns: 1fr; } .workspace { padding: 20px; border-radius: 22px; } }
-@media (prefers-reduced-motion: reduce) { .backdropTrack, .studentControls button { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .backdropTrack, .studentControls button { transition: none; } .researchSpinner span { animation-duration: 4s; } }

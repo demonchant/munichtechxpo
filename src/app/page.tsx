@@ -21,6 +21,13 @@ const studentStories = [
   { image: "/students/scholar_5.png", alt: "A student using a microscope during a biology investigation", caption: "Build confidence through inquiry" },
 ];
 
+const loadingMessages = [
+  "Understanding your question",
+  "Checking scope and feasibility",
+  "Designing a practical research method",
+  "Making evidence and limitations clear",
+];
+
 export default function Home() {
   const [topic, setTopic] = useState("How does daily screen time affect sleep duration among secondary school students?");
   const [level, setLevel] = useState("High school");
@@ -32,6 +39,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [speaking, setSpeaking] = useState(false);
   const [slide, setSlide] = useState(0);
+  const [loadingStage, setLoadingStage] = useState(0);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -51,8 +59,14 @@ export default function Home() {
 
   async function generate() {
     setLoading(true);
+    setLoadingStage(0);
     setError("");
     setPlan(null);
+    const stageTimers = [
+      window.setTimeout(() => setLoadingStage(1), 2500),
+      window.setTimeout(() => setLoadingStage(2), 6000),
+      window.setTimeout(() => setLoadingStage(3), 10000),
+    ];
     try {
       const response = await fetch("/api/research", {
         method: "POST",
@@ -65,6 +79,7 @@ export default function Home() {
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Something went wrong.");
     } finally {
+      stageTimers.forEach((timer) => window.clearTimeout(timer));
       setLoading(false);
     }
   }
@@ -127,7 +142,21 @@ export default function Home() {
         </div>
         <div className="workspace">
           <div className="stepbar"><i className="active"/><i className={plan ? "active" : ""}/><i/></div>
-          {!plan ? <>
+          {loading ? <div className="loadingState" role="status" aria-live="polite">
+            <div className="researchSpinner" aria-hidden="true"><span/><span/><span/></div>
+            <div className="eyebrow">ResearchBridge is working</div>
+            <h2>Building your research canvas</h2>
+            <p className="loadingMessage">{loadingMessages[loadingStage]}</p>
+            <div className="loadingStages">
+              {loadingMessages.map((message, index) => (
+                <div className={index < loadingStage ? "complete" : index === loadingStage ? "active" : ""} key={message}>
+                  <span>{index < loadingStage ? "✓" : index + 1}</span>
+                  <p>{message}</p>
+                </div>
+              ))}
+            </div>
+            <div className="loadingNote">Keep this page open. A careful plan can take a few moments.</div>
+          </div> : !plan ? <>
             <h2>Shape your inquiry</h2>
             <div className="hint">Tell us what you are curious about. We will turn it into a feasible, testable research plan.</div>
             <label htmlFor="topic">What would you like to investigate?</label>
