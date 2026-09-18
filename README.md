@@ -18,6 +18,7 @@ Many students have promising ideas but lack access to research mentorship. Resea
 - Print-friendly research canvas export
 - ElevenLabs spoken summaries for accessible learning
 - Server-only API keys
+- Per-IP API rate protection with a Vercel WAF production layer
 
 ## Judging criteria alignment
 
@@ -54,6 +55,10 @@ ResearchBridge uses generative AI to formulate questions, explain concepts, and 
 ## Privacy
 
 Dataset previews are truncated before inference. Users should not upload personal, medical, or confidential information. API credentials remain server-side.
+
+## Abuse protection
+
+Both paid API routes apply a per-IP fixed-window backstop. Production deployments should also configure a Vercel WAF fixed-window rule for the `/api/` path so abusive requests are rejected before a serverless function or provider is called.
 
 ## License
 

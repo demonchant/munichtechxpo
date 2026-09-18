@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 const SYSTEM = `You are ResearchBridge, a careful research coach for high-school and early-career learners. Return valid JSON only with keys: researchQuestion (string), hypothesis (string), method (array of 3-5 short strings), evidence (array of 2-4 strings), limitations (array of 2-4 strings), plainLanguageSummary (string). Never invent sources or claim certainty. Make the project ethical, feasible within two weeks, and suitable for a student. If dataset context is supplied, use only the visible columns/sample and explicitly state that the full dataset was not independently verified.`;
 
@@ -9,6 +10,9 @@ function extractOpenAIText(data: Record<string, unknown>) {
 }
 
 export async function POST(request: Request) {
+  const rate = checkRateLimit(request, "research", 8, 10 * 60 * 1000);
+  if (!rate.allowed) return rateLimitResponse(rate.resetAt);
+
   try {
     const body = await request.json();
     const topic = String(body.topic ?? "").trim().slice(0, 1200);

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  const rate = checkRateLimit(request, "speech", 12, 10 * 60 * 1000);
+  if (!rate.allowed) return rateLimitResponse(rate.resetAt);
+
   try {
     if (!process.env.ELEVENLABS_API_KEY || !process.env.ELEVENLABS_VOICE_ID) {
       return NextResponse.json({ error: "ElevenLabs narration is not configured yet." }, { status: 503 });
