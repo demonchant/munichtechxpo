@@ -1,17 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-type Plan = {
-  researchQuestion: string;
-  hypothesis: string;
-  method: string[];
-  evidence: string[];
-  limitations: string[];
-  plainLanguageSummary: string;
-  provider: string;
-};
 
 const studentStories = [
   { image: "/students/scholar_1.png", alt: "A student studying plant growth data in a science classroom", caption: "Study the world around you" },
@@ -29,15 +20,14 @@ const loadingMessages = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [topic, setTopic] = useState("How does daily screen time affect sleep duration among secondary school students?");
   const [level, setLevel] = useState("High school");
   const [dataset, setDataset] = useState("");
   const [provider, setProvider] = useState("auto");
   const [fileName, setFileName] = useState("");
-  const [plan, setPlan] = useState<Plan | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [speaking, setSpeaking] = useState(false);
   const [slide, setSlide] = useState(0);
   const [loadingStage, setLoadingStage] = useState(0);
 
@@ -61,7 +51,6 @@ export default function Home() {
     setLoading(true);
     setLoadingStage(0);
     setError("");
-    setPlan(null);
     const stageTimers = [
       window.setTimeout(() => setLoadingStage(1), 2500),
       window.setTimeout(() => setLoadingStage(2), 6000),
@@ -75,39 +64,13 @@ export default function Home() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not generate a plan.");
-      setPlan(data);
+      window.sessionStorage.setItem("researchbridgePlan", JSON.stringify(data));
+      router.push("/canvas");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Something went wrong.");
     } finally {
       stageTimers.forEach((timer) => window.clearTimeout(timer));
       setLoading(false);
-    }
-  }
-
-  async function listen() {
-    if (!plan) return;
-    setSpeaking(true);
-    setError("");
-    try {
-      const response = await fetch("/api/speech", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: `${plan.researchQuestion}. ${plan.plainLanguageSummary}` }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Audio is unavailable.");
-      }
-      const url = URL.createObjectURL(await response.blob());
-      const audio = new Audio(url);
-      audio.onended = () => {
-        URL.revokeObjectURL(url);
-        setSpeaking(false);
-      };
-      await audio.play();
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Audio is unavailable.");
-      setSpeaking(false);
     }
   }
 
@@ -141,7 +104,7 @@ export default function Home() {
           </div>
         </div>
         <div className="workspace">
-          <div className="stepbar"><i className="active"/><i className={plan ? "active" : ""}/><i/></div>
+          <div className="stepbar"><i className="active"/><i className={loading ? "active" : ""}/><i/></div>
           {loading ? <div className="loadingState" role="status" aria-live="polite">
             <div className="researchSpinner" aria-hidden="true"><span/><span/><span/></div>
             <div className="eyebrow">ResearchBridge is working</div>
@@ -156,7 +119,7 @@ export default function Home() {
               ))}
             </div>
             <div className="loadingNote">Keep this page open. A careful plan can take a few moments.</div>
-          </div> : !plan ? <>
+          </div> : <>
             <h2>Shape your inquiry</h2>
             <div className="hint">Tell us what you are curious about. We will turn it into a feasible, testable research plan.</div>
             <label htmlFor="topic">What would you like to investigate?</label>
@@ -168,18 +131,8 @@ export default function Home() {
             <label htmlFor="csv">Optional public or open CSV dataset</label>
             <div className="upload"><input id="csv" type="file" accept=".csv,text/csv" onChange={(event) => upload(event.target.files?.[0])}/>{fileName && <div>{fileName} is ready to preview</div>}</div>
             {error && <div className="error">{error}</div>}
-            <div className="actions"><button className="primary" disabled={loading} onClick={generate}>{loading ? "Building your plan..." : "Build my research plan"}</button></div>
-          </> : <div className="result">
-            <div className="resultHead"><div><div className="eyebrow">Your research canvas</div><div className="question">{plan.researchQuestion}</div></div><span className="tag">{plan.provider}</span></div>
-            <div className="section"><h3>Working hypothesis</h3><p>{plan.hypothesis}</p></div>
-            <div className="section"><h3>Method</h3><ul>{plan.method.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
-            <div className="section"><h3>Evidence to collect</h3><ul>{plan.evidence.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
-            <div className="section"><h3>What could limit this study?</h3><ul>{plan.limitations.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
-            <div className="section"><h3>In plain language</h3><p>{plan.plainLanguageSummary}</p></div>
-            <div className="notice"><b>Pause and verify.</b> This guidance comes from AI and is not established evidence. Check claims, protect participant privacy, and review your plan with a teacher or mentor.</div>
-            {error && <div className="error">{error}</div>}
-            <div className="actions"><button className="secondary" onClick={() => setPlan(null)}>Revise</button><button className="secondary" disabled={speaking} onClick={listen}>{speaking ? "Playing..." : "Listen"}</button><button className="primary" onClick={() => window.print()}>Export canvas</button></div>
-          </div>}
+            <div className="actions"><button className="primary" onClick={generate}>Build my research plan</button></div>
+          </>}
         </div>
         </div>
       </section>
