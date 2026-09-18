@@ -103,27 +103,26 @@ export default function Home() {
         <div className="pill">Responsible AI for every student</div>
       </nav>
       <section className="hero">
-        <div>
+        <div className="heroBackdrop" aria-hidden="true">
+          <div className="backdropTrack" style={{ transform: `translateX(${-slide * 100}%)` }}>
+            {studentStories.map((story) => (
+              <div className="backdropSlide" key={story.image}>
+                <Image src={story.image} alt="" fill sizes="100vw" priority={story.image === studentStories[0].image} />
+              </div>
+            ))}
+          </div>
+          <div className="heroShade" />
+        </div>
+        <div className="heroGrid">
+        <div className="heroCopy">
           <div className="eyebrow">From curiosity to credible inquiry</div>
           <h1>Research should begin with wonder, not worry.</h1>
           <p className="lead">A guided AI research coach that helps young learners shape better questions, understand data, and communicate evidence while keeping uncertainty visible.</p>
           <div className="trust"><span>Clear explanations</span><span>No invented citations</span><span>Limitations made visible</span></div>
-          <div className="studentShowcase" aria-label="Young researchers from different communities">
-            <div className="studentViewport">
-              <div className="studentTrack" style={{ transform: `translateX(${-slide * 100}%)` }}>
-                {studentStories.map((story) => (
-                  <figure className="studentStory" key={story.image}>
-                    <Image src={story.image} alt={story.alt} fill sizes="(max-width: 850px) 100vw, 50vw" priority={story.image === studentStories[0].image} />
-                    <figcaption>{story.caption}</figcaption>
-                  </figure>
-                ))}
-              </div>
-            </div>
-            <div className="studentControls" aria-label="Choose a student story">
-              {studentStories.map((story, index) => (
-                <button key={story.image} type="button" className={index === slide ? "current" : ""} onClick={() => setSlide(index)} aria-label={`Show image ${index + 1}`} aria-current={index === slide ? "true" : undefined} />
-              ))}
-            </div>
+          <div className="studentControls" aria-label="Choose a student story">
+            {studentStories.map((story, index) => (
+              <button key={story.image} type="button" className={index === slide ? "current" : ""} onClick={() => setSlide(index)} aria-label={`Show image ${index + 1}`} aria-current={index === slide ? "true" : undefined} />
+            ))}
           </div>
         </div>
         <div className="workspace">
@@ -152,6 +151,7 @@ export default function Home() {
             {error && <div className="error">{error}</div>}
             <div className="actions"><button className="secondary" onClick={() => setPlan(null)}>Revise</button><button className="secondary" disabled={speaking} onClick={listen}>{speaking ? "Playing..." : "Listen"}</button><button className="primary" onClick={() => window.print()}>Export canvas</button></div>
           </div>}
+        </div>
         </div>
       </section>
       <section className="values">

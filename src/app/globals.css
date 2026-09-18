@@ -20,22 +20,23 @@ button { cursor: pointer; }
 .brand { font: 700 22px var(--font-serif), serif; letter-spacing: -.6px; }
 .brand span { color: var(--green); }
 .pill { border: 1px solid #b9c6bf; border-radius: 999px; padding: 8px 13px; font-size: 13px; background: rgba(255,255,255,.55); }
-.hero { max-width: 1180px; margin: 0 auto; padding: 54px 28px 42px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 70px; align-items: center; }
+.hero { position: relative; isolation: isolate; overflow: hidden; min-height: 720px; padding: 70px 28px; display: flex; align-items: center; }
+.heroBackdrop { position: absolute; z-index: -2; inset: 0; overflow: hidden; background: #1b2d26; }
+.backdropTrack { display: flex; height: 100%; transition: transform 1s cubic-bezier(.22,.61,.36,1); }
+.backdropSlide { position: relative; flex: 0 0 100%; height: 100%; }
+.backdropSlide img { object-fit: cover; object-position: center; }
+.heroShade { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(9,24,18,.9) 0%, rgba(9,24,18,.7) 48%, rgba(9,24,18,.42) 100%); }
+.heroGrid { width: 100%; max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr .95fr; gap: 70px; align-items: center; }
+.heroCopy { color: white; text-shadow: 0 2px 22px rgba(0,0,0,.28); }
+.heroCopy .eyebrow { color: var(--lime); }
 .eyebrow { color: var(--green); font-weight: 750; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; }
 h1 { font: 650 clamp(48px, 6vw, 82px)/.98 var(--font-serif), serif; margin: 18px 0 24px; letter-spacing: -3px; }
-.lead { font-size: 18px; line-height: 1.65; color: var(--muted); max-width: 610px; }
+.lead { font-size: 18px; line-height: 1.65; color: rgba(255,255,255,.9); max-width: 610px; }
 .trust { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-.trust span { font-size: 13px; padding: 9px 12px; border-radius: 12px; background: rgba(255,255,255,.7); border: 1px solid var(--line); }
-.studentShowcase { margin-top: 24px; max-width: 610px; }
-.studentViewport { overflow: hidden; border-radius: 24px; border: 1px solid rgba(198,208,201,.8); box-shadow: 0 20px 48px rgba(37,63,52,.14); background: #dfe9df; }
-.studentTrack { display: flex; transition: transform .7s cubic-bezier(.22,.61,.36,1); }
-.studentStory { position: relative; flex: 0 0 100%; aspect-ratio: 4 / 3; margin: 0; overflow: hidden; }
-.studentStory img { object-fit: cover; }
-.studentStory::after { content: ""; position: absolute; inset: 52% 0 0; background: linear-gradient(transparent, rgba(10,24,18,.72)); }
-.studentStory figcaption { position: absolute; z-index: 1; left: 20px; right: 20px; bottom: 18px; color: white; font: 620 20px var(--font-serif), serif; }
-.studentControls { display: flex; justify-content: center; gap: 8px; margin-top: 13px; }
-.studentControls button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: #b8c4bd; transition: width .25s ease, background .25s ease; }
-.studentControls button.current { width: 25px; border-radius: 99px; background: var(--green); }
+.trust span { font-size: 13px; padding: 9px 12px; border-radius: 12px; background: rgba(9,24,18,.5); border: 1px solid rgba(255,255,255,.32); backdrop-filter: blur(8px); }
+.studentControls { display: flex; justify-content: flex-start; gap: 8px; margin-top: 28px; }
+.studentControls button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.52); box-shadow: 0 1px 5px rgba(0,0,0,.2); transition: width .25s ease, background .25s ease; }
+.studentControls button.current { width: 28px; border-radius: 99px; background: var(--lime); }
 .workspace { background: var(--card); border: 1px solid rgba(198,208,201,.8); border-radius: 28px; padding: 26px; box-shadow: 0 28px 80px rgba(37,63,52,.14); backdrop-filter: blur(14px); }
 .stepbar { display: flex; gap: 7px; margin-bottom: 25px; }
 .stepbar i { height: 5px; flex: 1; border-radius: 99px; background: #dfe5df; }
@@ -69,6 +70,6 @@ textarea:focus, select:focus, input:focus { border-color: var(--green); box-shad
 .value b { font: 620 19px var(--font-serif), serif; display: block; margin-bottom: 7px; }
 .value p { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0; }
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
-@media (max-width: 850px) { .hero { grid-template-columns: 1fr; gap: 35px; padding-top: 25px; } h1 { letter-spacing: -2px; } .values { grid-template-columns: 1fr; } }
+@media (max-width: 850px) { .hero { padding-top: 48px; padding-bottom: 48px; } .heroGrid { grid-template-columns: 1fr; gap: 35px; } .heroShade { background: linear-gradient(180deg, rgba(9,24,18,.82), rgba(9,24,18,.62)); } h1 { letter-spacing: -2px; } .values { grid-template-columns: 1fr; } }
 @media (max-width: 500px) { .nav, .hero, .values { padding-left: 18px; padding-right: 18px; } .row { grid-template-columns: 1fr; } .workspace { padding: 20px; border-radius: 22px; } }
-@media (prefers-reduced-motion: reduce) { .studentTrack, .studentControls button { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .backdropTrack, .studentControls button { transition: none; } }
