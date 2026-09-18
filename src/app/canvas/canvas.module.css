@@ -47,6 +47,16 @@
 .sideCard p, .sideCard li { color: #66726d; font-size: 13px; line-height: 1.55; }
 .sideCard button, .sideCard a { width: 100%; display: block; margin-top: 15px; padding: 11px 13px; border: 0; border-radius: 12px; color: white; background: #0f6b4f; text-align: center; text-decoration: none; font-weight: 800; cursor: pointer; }
 .sideCard button:disabled { opacity: .6; cursor: wait; }
+.audioPlayer { margin-top: 17px; padding: 15px; display: grid; grid-template-columns: 82px 1fr; gap: 13px; align-items: center; border-radius: 15px; color: white; background: #173c2f; box-shadow: 0 10px 25px rgba(23,60,47,.18); }
+.audioPlayer strong, .audioPlayer > div:last-child > span { display: block; }
+.audioPlayer strong { font-size: 12px; }
+.audioPlayer > div:last-child > span { margin-top: 3px; color: rgba(255,255,255,.65); font-size: 10px; }
+.audioWave { height: 34px; display: flex; align-items: center; justify-content: center; gap: 3px; }
+.audioWave span { width: 3px; height: 8px; border-radius: 99px; background: #d9f99d; animation: audioPulse .85s ease-in-out infinite alternate; }
+.audioWave span:nth-child(2n) { animation-delay: .12s; }
+.audioWave span:nth-child(3n) { animation-delay: .28s; }
+.audioWave span:nth-child(4n) { animation-delay: .4s; }
+.audioWave span:nth-child(5n) { animation-delay: .18s; }
 .verifyCard { background: #fff6d9; border-color: #eadb9c; }
 .verifyCard ul { margin: 12px 0 0; padding-left: 18px; }
 .audioError { margin-top: 10px; color: #9d2b13; font-size: 12px; }
@@ -55,6 +65,12 @@
 .emptyCard h1 { margin: 30px 0 10px; font: 650 42px var(--font-serif), serif; }
 .emptyCard p { color: #66726d; line-height: 1.6; }
 .emptyCard a { display: inline-block; margin-top: 15px; padding: 12px 18px; border-radius: 12px; color: white; background: #0f6b4f; text-decoration: none; font-weight: 800; }
+
+@keyframes audioPulse {
+  0% { height: 7px; opacity: .55; }
+  45% { height: 29px; opacity: 1; }
+  100% { height: 14px; opacity: .75; }
+}
 
 @media (max-width: 880px) {
   .canvasLayout { grid-template-columns: 1fr; }
@@ -81,4 +97,8 @@
   .provider, .summaryStats strong { color: #0f6b4f; border-color: #dce2dc; }
   .canvasLayout { display: block; padding-top: 10px; }
   .canvasCard { margin-bottom: 16px; break-inside: avoid; box-shadow: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audioWave span { animation-duration: 2.8s; }
 }

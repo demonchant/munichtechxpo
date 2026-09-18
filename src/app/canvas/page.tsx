@@ -34,12 +34,12 @@ function readPlan(value: string | null): Plan | null {
 export default function CanvasPage() {
   const storedPlan = useSyncExternalStore(subscribe, getStoredPlan, () => null);
   const plan = readPlan(storedPlan);
-  const [speaking, setSpeaking] = useState(false);
+  const [audioState, setAudioState] = useState<"idle" | "loading" | "playing">("idle");
   const [error, setError] = useState("");
 
   async function listen() {
     if (!plan) return;
-    setSpeaking(true);
+    setAudioState("loading");
     setError("");
     try {
       const response = await fetch("/api/speech", {
@@ -55,12 +55,13 @@ export default function CanvasPage() {
       const audio = new Audio(url);
       audio.onended = () => {
         URL.revokeObjectURL(url);
-        setSpeaking(false);
+        setAudioState("idle");
       };
       await audio.play();
+      setAudioState("playing");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Audio is unavailable.");
-      setSpeaking(false);
+      setAudioState("idle");
     }
   }
 
@@ -137,7 +138,15 @@ export default function CanvasPage() {
             <div className={styles.sideIcon} aria-hidden="true">◉</div>
             <h2>Listen to your summary</h2>
             <p>Hear the question and explanation read aloud.</p>
-            <button type="button" disabled={speaking} onClick={listen}>{speaking ? "Playing your summary..." : "Play audio summary"}</button>
+            {audioState === "playing" && <div className={styles.audioPlayer} role="status" aria-live="polite">
+              <div className={styles.audioWave} aria-hidden="true">
+                {Array.from({ length: 12 }, (_, index) => <span key={index} />)}
+              </div>
+              <div><strong>Now playing</strong><span>Your research summary</span></div>
+            </div>}
+            <button type="button" disabled={audioState !== "idle"} onClick={listen}>
+              {audioState === "loading" ? "Preparing your audio..." : audioState === "playing" ? "Audio is playing" : "Play audio summary"}
+            </button>
             {error && <div className={styles.audioError}>{error}</div>}
           </div>
 
